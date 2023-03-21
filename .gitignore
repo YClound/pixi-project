@@ -2,3 +2,4 @@
 node_module
 dist
 dev
+/canvas/.DS_Store
