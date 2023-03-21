@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>canvas - 基础/图形</title>
+  <style>
+    #canvas {
+      box-shadow: 0px 0px 5px #ccc;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <canvas
+    id="canvas"
+    width="1420"
+    height="800"
+  >
+    当前浏览器不支持canvas元素，请升级或更换浏览器！
+  </canvas>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    ctx.beginPath();
+    ctx.rect(50, 50, 200, 100); // 绘制长方形
+    ctx.strokeStyle = '#fff000'; // 描边样式
+    ctx.stroke(); // 描边
+    ctx.closePath();
+
+    ctx.beginPath(); // 开启新路径
+    ctx.rect(300, 50, 200, 100);
+    ctx.fillStyle = '#fff000'; // 填充样式
+    ctx.fill(); // 填充
+    ctx.closePath();
+
+    // 直线
+    ctx.beginPath();
+    ctx.lineCap = 'square';
+    ctx.lineJoin = 'bevel'
+    ctx.lineWidth = 8;
+    ctx.moveTo(50, 30);
+    ctx.lineTo(250, 10);
+    ctx.lineTo(250, 40);
+    ctx.lineTo(50, 30);
+    ctx.stroke();
+    ctx.closePath();
+
+    ctx.beginPath();
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#ff0000'; // 描边样式
+    ctx.setLineDash([5, 10, 15]);
+    ctx.moveTo(50, 320);
+    ctx.lineTo(250, 320);
+    ctx.stroke();
+    ctx.closePath();
+
+    ctx.beginPath();
+    ctx.lineDashOffset = 15
+    ctx.moveTo(350, 320);
+    ctx.lineTo(550, 320);
+    ctx.stroke();
+    ctx.closePath();
+
+    ctx.beginPath();
+    ctx.setLineDash([]);
+    ctx.lineWidth = 2; // 线条宽度
+    ctx.miterLimit = 10;
+    ctx.moveTo(0, 350);
+    for (i = 0; i < 50 ; i++) {
+      var dy = i % 2 == 0 ? 400 : 350;
+      ctx.lineTo(Math.pow(i, 1.5) * 2, dy);
+    }
+    ctx.stroke();
+    ctx.closePath();
+
+    // 圆形
+    ctx.beginPath();
+    ctx.arc(50, 220, 50, 0, 90 * Math.PI /180)
+    ctx.stroke();
+    ctx.closePath();
+
+    ctx.beginPath();
+    ctx.arc(180, 220, 50, 270 * Math.PI /180, 90 * Math.PI /180, true)
+    ctx.stroke();
+    ctx.closePath();
+
+    ctx.beginPath();
+    ctx.arc(300, 220, 50, 0, 135 * Math.PI /180 )
+    ctx.fill();
+    ctx.closePath();
+
+    ctx.beginPath();
+    ctx.arc(420, 220, 50, 0, 90 * Math.PI /180, true)
+    ctx.fill();
+    ctx.closePath();
+
+    // 椭圆
+    ctx.beginPath();
+    ctx.ellipse(700, 50, 50, 20, 0, 0, 360 * Math.PI / 180)
+    ctx.stroke();
+    ctx.closePath();
+
+    ctx.beginPath();
+    ctx.ellipse(850, 50, 50, 20, 0, 0, 360 * Math.PI / 180)
+    ctx.stroke();
+    ctx.closePath();
+
+    ctx.beginPath();
+    ctx.ellipse(775, 150, 20, 50, 0, 0, 360 * Math.PI / 180)
+    ctx.fill();
+    ctx.closePath();
+
+    // 二次贝塞尔曲线
+    ctx.beginPath();
+    ctx.moveTo(950, 150);
+    ctx.quadraticCurveTo(1050, 50, 1150, 150)
+    ctx.stroke();
+    ctx.closePath();
+
+    // 三次贝塞尔曲线
+    ctx.beginPath();
+    ctx.globalAlpha = 0.5;
+    ctx.moveTo(950, 300);
+    ctx.bezierCurveTo(1000, 150, 1100, 150, 1150, 300)
+    ctx.stroke();
+    ctx.closePath();
+
+  </script>
+</body>
+</html>

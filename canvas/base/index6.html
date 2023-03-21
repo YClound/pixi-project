@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>canvas - 图片保存并下载</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    canvas {
+      box-shadow: 0px 0px 5px #ccc;
+      border-radius: 8px;
+      float: left;
+    }
+
+    img {
+      width: 800px;
+      height: 500px;
+      float: right;
+    }
+
+    button {
+      position: absolute;
+      top: 550px;
+      left: 50%;
+      margin-left: -40px;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="canvas" width="800" height="500">
+    当前浏览器不支持canvas元素，请升级或更换浏览器！
+  </canvas>
+  <img id="img" src="" />
+  <button id="btn">转化为图片且下载</button>
+  <script>
+    // 获取Canvas
+    const canvas = document.getElementById('canvas');
+    var Img = document.getElementById('img');
+    var Btn = document.getElementById('btn');
+    const width = canvas.width;
+    const height = canvas.height;
+    // 获取绘制上下文
+    const ctx = canvas.getContext('2d');
+    const images = [
+      {
+        name: "白月魁",
+        url: "https://img1.baidu.com/it/u=4141276181,3458238270&fm=253&fmt=auto&app=138&f=JPEG?w=281&h=500"
+      },
+      {
+        name: "鸣人",
+        url: "https://img2.baidu.com/it/u=1548765981,166433699&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=889",
+      },
+      {
+        name: "路飞",
+        url: "https://img2.baidu.com/it/u=1700240772,3511789617&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500",
+      },
+      {
+        name: "哪吒",
+        url: "https://img2.baidu.com/it/u=4044887937,3129736188&fm=253&fmt=auto&app=138&f=JPEG?w=640&h=392",
+      },
+      {
+        name: "千寻",
+        url: "https://img1.baidu.com/it/u=3907076642,679964949&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=293",
+      },
+    ];
+    let imagesData = []
+    let clickCoordinate = { x: 0, y: 0 }
+    let target;
+    images.forEach((item) => {
+      // 创建image元素
+      const image = new Image()
+      image.crossOrigin = "Anonymous";
+      image.src = item.url;
+      const name = item.name;
+      image.onload = () => {
+        // 控制宽度为200（等宽）
+        const w = 200;
+        // 高度按宽度200的比例缩放
+        const h = 200 / image.width * image.height;
+        const x = Math.random() * (width - w);
+        const y = Math.random() * (height - h);
+        const imageObj = { image, name, x, y, w, h }
+        imagesData.push(imageObj)
+        draw(imageObj)
+      }
+    })
+
+    // 渲染图片
+    function draw(imageObj) {
+      ctx.drawImage(imageObj.image, imageObj.x, imageObj.y, imageObj.w, imageObj.h);
+      ctx.beginPath();
+      ctx.strokeStyle = "#fff";
+      ctx.rect(imageObj.x, imageObj.y, imageObj.w, imageObj.h);
+      ctx.stroke();
+    }
+
+    // 为canvas添加鼠标按下事件
+    canvas.addEventListener("mousedown", mousedownFn, false)
+    // 为按钮添加点击事件
+    Btn.addEventListener("click", clickFn, false)
+
+    // 鼠标按下触发的方法
+    function mousedownFn(e) {
+      // 获取元素按下时的坐标
+      clickCoordinate.x = e.pageX - canvas.offsetLeft;
+      clickCoordinate.y = e.pageY - canvas.offsetTop;
+      // 判断选中的元素是哪一个
+      checkElement()
+      // 未选中元素则return
+      if (target === undefined) return;
+      // 为canvas添加鼠标移动和鼠标抬起事件
+      canvas.addEventListener("mousemove", mousemoveFn, false)
+      canvas.addEventListener("mouseup", mouseupFn, false)
+    }
+
+    // 鼠标移动触发
+    function mousemoveFn(e) {
+      const moveX = e.pageX
+      const moveY = e.pageY
+      // 计算移动元素的坐标
+      imagesData[target].x = imagesData[target].x + (moveX - clickCoordinate.x);
+      imagesData[target].y = imagesData[target].y + (moveY - clickCoordinate.y);
+      // 清空画布
+      ctx.clearRect(0, 0, width, height);
+      // 清空画布以后重新绘制
+      imagesData.forEach((i) => draw(i))
+      // 赋值
+      clickCoordinate.x = moveX;
+      clickCoordinate.y = moveY;
+    }
+
+    // 鼠标抬起触发
+    function mouseupFn() {
+      // 鼠标抬起以后移除事件
+      canvas.removeEventListener("mousemove", mousemoveFn, false)
+      canvas.removeEventListener("mouseup", mouseupFn, false)
+      // 销毁选中元素
+      target = undefined
+    }
+
+    // 检测选中的元素是哪一个
+    function checkElement() {
+      imagesData.forEach((item, index) => {
+        draw(item)
+        if (ctx.isPointInPath(clickCoordinate.x, clickCoordinate.y)) {
+          target = index
+          console.log("点击的元素是：", item.name)
+        }
+      })
+    }
+
+    // 点击截图函数
+    function clickFn() {
+      // 将canvas转换成base64的url
+      let url = canvas.toDataURL("image/png");
+      // 把Canvas 转化为图片
+      Img.src = url;
+      // 将base64转换为文件对象
+      let arr = url.split(",")
+      let mime = arr[0].match(/:(.*?);/)[1] // 此处得到的为文件类型
+      let bstr = atob(arr[1]) // 此处将base64解码
+      let n = bstr.length
+      let u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      // 通过以下方式将以上变量生成文件对象，三个参数分别为文件内容、文件名、文件类型
+      let file = new File([u8arr], "filename", { type: mime });
+      // 将文件对象通过a标签下载
+      let aDom = document.createElement("a"); // 创建一个 a 标签
+      aDom.download = file.name; // 设置文件名
+      let href = URL.createObjectURL(file); // 将file对象转成 UTF-16 字符串
+      aDom.href = href; // 放入href
+      document.body.appendChild(aDom); // 将a标签插入 body
+      aDom.click(); // 触发 a 标签的点击
+      document.body.removeChild(aDom); // 移除刚才插入的 a 标签
+      URL.revokeObjectURL(href); // 释放刚才生成的 UTF-16 字符串
+    };
+
+  </script>
+</body>
+
+</html>

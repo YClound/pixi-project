@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>canvas - 渐变/文本</title>
+  <style>
+    #canvas {
+      box-shadow: 0px 0px 5px #ccc;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="canvas" width="1420" height="800">
+    当前浏览器不支持canvas元素，请升级或更换浏览器！
+  </canvas>
+
+  <script>
+    window.onload = function () {
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.strokeStyle = '#f00';
+      // ctx.fillStyle = '#00f';
+      ctx.lineWidth = 2;
+
+      // 线性渐变
+      ctx.beginPath();
+      var gradient = ctx.createLinearGradient(10, 10, 400, 10);
+      gradient.addColorStop(0, "#000");
+      gradient.addColorStop(1, '#fff');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(10, 60, 400, 40);
+      ctx.closePath();
+
+      ctx.beginPath();
+      var gradient1 = ctx.createLinearGradient(500, 10, 900, 10);
+      gradient1.addColorStop(0.5, "#000");
+      gradient1.addColorStop(1, '#fff');
+      ctx.fillStyle = gradient1;
+      ctx.fillRect(500, 60, 400, 40);
+      ctx.closePath();
+
+      // 径向渐变
+      ctx.beginPath();
+      var gradient2 = ctx.createRadialGradient(110, 220, 100, 110, 220, 0);
+      gradient2.addColorStop(0, "#000");
+      gradient2.addColorStop(1, '#fff');
+      ctx.fillStyle = gradient2;
+      ctx.fillRect(10, 120, 200, 200);
+      ctx.closePath();
+
+      ctx.beginPath();
+      var gradient3 = ctx.createRadialGradient(350, 220, 100, 350, 220, 30);
+      gradient3.addColorStop(0, "#000");
+      gradient3.addColorStop(1, '#fff');
+      ctx.fillStyle = gradient3;
+      ctx.fillRect(250, 120, 200, 200);
+      ctx.closePath();
+
+      ctx.beginPath();
+      var gradient4 = ctx.createRadialGradient(600, 220, 100, 600, 220, 0);
+      gradient4.addColorStop(0.5, "#000");
+      gradient4.addColorStop(1, '#fff');
+      ctx.fillStyle = gradient4;
+      ctx.fillRect(500, 120, 200, 200);
+      ctx.closePath();
+
+      ctx.beginPath();
+      var gradient5 = ctx.createRadialGradient(850, 220, 100, 800, 160, 10);
+      gradient5.addColorStop(0, "#000");
+      gradient5.addColorStop(1, '#fff');
+      ctx.fillStyle = gradient5;
+      ctx.fillRect(750, 120, 200, 200);
+      ctx.closePath();
+
+      ctx.beginPath();
+      const img = new Image(200, 200);
+      img.src = 'https://sl-online-oss.shulidata.com/resource/ad_platform_miniapp/home-banner.png';
+      img.onload = function () {
+        const ptrn = ctx.createPattern(img, 'no-repeat');
+        ctx.fillStyle = ptrn;
+        ctx.fillRect(10, 0, 500, 50);
+        console.log('4444444', img, ptrn)
+      }
+      ctx.closePath();
+
+      // 文本
+      const txt = '携手创作，共同成长，你好，Canvas';
+      ctx.beginPath();
+      ctx.shadowColor = "#cccccc"; // 设置阴影的颜色
+      ctx.shadowOffsetX = 10; // 设置X轴上的阴影
+      ctx.shadowOffsetY = 10; // 设置Y轴上的阴影
+      ctx.shadowBlur = 10; // 设置阴影的模糊程度
+      ctx.direction = 'rtl';
+      ctx.textBaseline = 'top';
+      ctx.font = "20px Arial";
+      ctx.strokeText(txt, 1000, 50, 400);
+      ctx.fillText("字体宽度:" + ctx.measureText(txt).width, 1200, 50, 400)
+      console.log(ctx.measureText(txt))
+
+      ctx.beginPath();
+      ctx.font = "12px Georgia";
+      ctx.textBaseline = 'hanging';
+      ctx.textAlign = "end";
+      ctx.shadowBlur = 5; // 设置阴影的模糊程度
+      ctx.fillText(txt, 1000, 120, 400);
+      ctx.fillText("字体宽度:" + ctx.measureText(txt).width, 1250, 120, 400)
+
+
+      ctx.beginPath();
+      ctx.textBaseline = 'middle';
+      ctx.textAlign = "left";
+      ctx.fillText(txt, 1000, 190, 400);
+
+      ctx.beginPath();
+      ctx.textBaseline = 'alphabetic';
+      ctx.textAlign = "right";
+      ctx.shadowOffsetX = 30; // 设置X轴上的阴影
+      ctx.shadowOffsetY = 30; // 设置Y轴上的阴影
+      ctx.fillText(txt, 1000, 260, 400);
+
+      ctx.beginPath();
+      ctx.textBaseline = 'ideographic';
+      ctx.textAlign = "center";
+      ctx.shadowOffsetX = -10; // 设置X轴上的阴影
+      ctx.shadowOffsetY = -10; // 设置Y轴上的阴影
+      ctx.fillText(txt, 1000, 330, 400);
+    }
+
+  </script>
+</body>
+
+</html>

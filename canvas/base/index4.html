@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>canvas - 绘制动画</title>
+  <style>
+    #canvas {
+      box-shadow: 0px 0px 5px #ccc;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="canvas" width="1420" height="800">
+    当前浏览器不支持canvas元素，请升级或更换浏览器！
+  </canvas>
+
+  <script>
+    window.onload = function () {
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+      ctx.fillStyle = '#f00';
+      function tsl() {
+        ctx.beginPath();
+        ctx.save();
+        ctx.translate(10, 10);
+        ctx.fillRect(0, 0, 200, 100);
+        ctx.closePath();
+      }
+
+      tsl();
+     
+      ctx.restore(); // 重置存储原始的位置信息
+      // ctx.translate(-10, -10);
+      ctx.beginPath();
+      ctx.fillStyle = 'grey';
+      ctx.save(); // 存储信息
+      ctx.fillRect(230, 10, 200, 100);
+      ctx.closePath();
+
+      ctx.beginPath();
+      ctx.fillStyle = 'orange';
+      ctx.fillRect(450, 10, 200, 100);
+      ctx.closePath();
+
+      ctx.beginPath();
+      ctx.restore();
+      ctx.fillRect(670, 10, 200, 100);
+      ctx.closePath();
+      
+
+      // setInterval
+      ctx.beginPath();
+      ctx.fillStyle = '#ccc';
+      let num = 0
+      setInterval(() => {
+        if (num <= width) {
+          ctx.clearRect(0, 120, width, 100)
+          ctx.fillRect(num, 120, 100, 100);
+        }
+        num += 1
+      })
+      ctx.closePath();
+
+      ctx.beginPath();
+      ctx.globalCompositeOperation = 'destination-over';
+      let num1 = 0;
+      ctx.strokeStyle = '#ccc';
+      const img = new Image();
+      img.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjQwcHgiIGhlaWdodD0iNDBweCIgdmlld0JveD0iMTIgMTIgNDAgNDAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMTIgMTIgNDAgNDAiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxwYXRoIGZpbGw9IiMzMzMzMzMiIGQ9Ik0zMiAxMy40Yy0xMC41IDAtMTkgOC41LTE5IDE5YzAgOC40IDUuNSAxNS41IDEzIDE4YzEgMC4yIDEuMy0wLjQgMS4zLTAuOWMwLTAuNSAwLTEuNyAwLTMuMiBjLTUuMyAxLjEtNi40LTIuNi02LjQtMi42QzIwIDQxLjYgMTguOCA0MSAxOC44IDQxYy0xLjctMS4yIDAuMS0xLjEgMC4xLTEuMWMxLjkgMC4xIDIuOSAyIDIuOSAyYzEuNyAyLjkgNC41IDIuMSA1LjUgMS42IGMwLjItMS4yIDAuNy0yLjEgMS4yLTIuNmMtNC4yLTAuNS04LjctMi4xLTguNy05LjRjMC0yLjEgMC43LTMuNyAyLTUuMWMtMC4yLTAuNS0wLjgtMi40IDAuMi01YzAgMCAxLjYtMC41IDUuMiAyIGMxLjUtMC40IDMuMS0wLjcgNC44LTAuN2MxLjYgMCAzLjMgMC4yIDQuNyAwLjdjMy42LTIuNCA1LjItMiA1LjItMmMxIDIuNiAwLjQgNC42IDAuMiA1YzEuMiAxLjMgMiAzIDIgNS4xYzAgNy4zLTQuNSA4LjktOC43IDkuNCBjMC43IDAuNiAxLjMgMS43IDEuMyAzLjVjMCAyLjYgMCA0LjYgMCA1LjJjMCAwLjUgMC40IDEuMSAxLjMgMC45YzcuNS0yLjYgMTMtOS43IDEzLTE4LjFDNTEgMjEuOSA0Mi41IDEzLjQgMzIgMTMuNHoiLz48L3N2Zz4=';
+      img.onload = function() {
+        requestAnimationFrame(playRun)
+      }
+
+      function playRun() {
+        ctx.clearRect(0, 220, 600, 500);
+
+        ctx.save();
+
+        ctx.translate(250, 440); 
+
+        num1 += 0.01
+        ctx.rotate(-num1);
+        ctx.translate(0, 175)
+        ctx.drawImage(img, 0, 0, 40, 40);
+
+        ctx.restore();
+        ctx.beginPath();
+        ctx.arc(250, 440, 200, 0, Math.PI * 2, false);
+        ctx.stroke();
+
+        requestAnimationFrame(playRun);
+      }
+
+
+      ctx.beginPath();
+      ctx.save();
+      ctx.fillStyle = 'orange';
+      ctx.transform(1.5, Math.PI/10, 0, 1.5, 0, 0);
+      ctx.fillRect(600, 240, 200, 200);
+      ctx.closePath();
+      ctx.restore();
+    }
+  </script>
+</body>
+
+</html>
